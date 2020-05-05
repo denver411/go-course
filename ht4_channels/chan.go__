@@ -1,0 +1,42 @@
+//package main
+//
+//import (
+//	"fmt"
+//	mathRand "math/rand"
+//	"sync"
+//)
+//
+///*
+//4. Создаем канал для чисел. Создаем 1000 горутин в каждой из которых в этот канал пишем какое-нибудь число.
+//Создаем функцию, которая принимает этот канал и читает из него все что можно и просто складывает между собой.
+//В main рутине нужно дождаться выполнения этой функции и получить результат сложения.
+//*/
+//type Chan chan int
+//
+//func main() {
+//	wg := sync.WaitGroup{}
+//	numbers := make(chan int, 1000)
+//
+//	for i := 0; i < 1000; i++ {
+//		wg.Add(1)
+//		go func() {
+//			n := mathRand.Intn(100)
+//			numbers <- n
+//			wg.Done()
+//		}()
+//	}
+//	wg.Wait()
+//	close(numbers)
+//
+//	result := Sum(numbers)
+//	fmt.Println(result)
+//}
+//
+//func Sum(ch <-chan int) int {
+//	var s int = 0
+//	for n := range ch {
+//		s += n
+//	}
+//
+//	return s
+//}
