@@ -12,26 +12,24 @@ type Sort interface {
 }
 
 // SortInt struct
-type SortInt struct {
-	data []int
-}
+type SortInt []int
 
 func (s SortInt) Len() int {
-	return len(s.data)
+	return len(s)
 }
 
 func (s SortInt) Less(i, j int) bool {
-	return s.data[j] > s.data[i]
+	return s[j] > s[i]
 }
 
 func (s SortInt) Swap(i, j int) {
-	s.data[j], s.data[i] = s.data[i], s.data[j]
+	s[j], s[i] = s[i], s[j]
 }
 
 func bubbleSort(s Sort) Sort {
 	l := s.Len()
 	for i := 0; i < l; i++ {
-		for j := 1; j < l; j++ {
+		for j := 1; j < l-i; j++ {
 			if s.Less(j, j-1) {
 				s.Swap(j-1, j)
 			}
@@ -43,9 +41,7 @@ func bubbleSort(s Sort) Sort {
 
 func main() {
 	// slStr := []string{"ololo", "hey", "hello", "world", "go"}
-	sInt := SortInt{
-		data: []int{6, 4, 2, 9, 1, 0, 6, 2, 8},
-	}
+	sInt := SortInt{6, 4, 2, 9, 1, 0, 6, 2, 8}
 
 	fmt.Println(sInt)
 	sortSlInt := bubbleSort(sInt)
