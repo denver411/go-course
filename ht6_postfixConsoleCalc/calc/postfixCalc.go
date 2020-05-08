@@ -2,23 +2,10 @@ package calc
 
 import (
 	"errors"
-	"math"
 	"strconv"
 )
 
-type operator struct {
-	apply    func(a float64, b float64) float64
-	priority uint8
-}
-
-var operators = map[string]operator{
-	"+": {apply: func(a float64, b float64) float64 { return a + b }, priority: 0},
-	"-": {apply: func(a float64, b float64) float64 { return a - b }, priority: 0},
-	"/": {apply: func(a float64, b float64) float64 { return a / b }, priority: 1},
-	"*": {apply: func(a float64, b float64) float64 { return a * b }, priority: 1},
-	"^": {apply: func(a float64, b float64) float64 { return math.Pow(a, b) }, priority: 2},
-}
-
+// GetPostfixResult function
 func GetPostfixResult(expression []string) (float64, error) {
 	stack := []float64{}
 
@@ -29,7 +16,7 @@ func GetPostfixResult(expression []string) (float64, error) {
 
 		switch {
 		case string(char) == " ":
-			break
+			continue
 		case isOperator:
 			b, stack = stack[len(stack)-1], stack[:len(stack)-1]
 			a, stack = stack[len(stack)-1], stack[:len(stack)-1]

@@ -1,77 +1,73 @@
 package calc
 
-import "errors"
+import (
+	"errors"
+)
 
-// function GetPostfixNotation
+// GetPostfixNotation function
 func GetPostfixNotation(infix []string) ([]string, error) {
-	stack := []string{}
-	postfix := []string{}
+	stack := Stack{}
+	postfix := Stack{}
 
 	for _, char := range infix {
 		operator, isOperator := operators[char]
 
 		switch {
 		case string(char) == " ":
-			break
+			continue
 		case char == "(":
-			stack = append(stack, char)
+			stack.Push(char)
 		case char == ")":
-			stack, postfix = handleBracket(stack, postfix)
+			var err error
+			err = handleBracket(&stack, &postfix)
 
-			if stack == nil {
-				return nil, errors.New("Wrong infix expression. Check operators. Only + - * / ^ () are supported")
+			if err != nil {
+				return nil, err
 			}
 		case isOperator:
-			stack, postfix = handleOperator(stack, postfix, char, operator)
+			handleOperator(&stack, &postfix, char, operator)
 		default:
-			postfix = append(postfix, char)
+			postfix.Push(char)
 		}
 	}
 
 	if len(stack) > 0 {
 		for idx := range stack {
-			postfix = append(postfix, stack[len(stack)-idx-1])
+			postfix.Push(stack[len(stack)-idx-1])
 		}
 	}
 
 	return postfix, nil
 }
 
-func handleBracket(stack []string, res []string) ([]string, []string) {
-	stackCopy := append(stack[:0:0], stack...)
-	resCopy := append(res[:0:0], res...)
-	for j := len(stackCopy) - 1; j >= 0; j-- {
-		last := stackCopy[len(stackCopy)-1]
+func handleBracket(stack *Stack, res *Stack) error {
+	for j := stack.Len() - 1; j >= 0; j-- {
+		last := stack.Last()
 
 		if last != "(" && j != 0 {
-			resCopy = append(resCopy, last)
-			stackCopy = stackCopy[:len(stackCopy)-1]
-		} else if last == "(" && j == 0 {
-			return nil, nil
+			res.Push(last)
+			stack.Pop()
+		} else if last != "(" && j == 0 {
+			return errors.New("Wrong infix expression. Check operators. Only + - * / ^ () are supported")
 		} else if last == "(" {
-			stackCopy = stackCopy[:len(stackCopy)-1]
+			stack.Pop()
 			break
 		}
 	}
 
-	return stackCopy, resCopy
+	return nil
 }
 
-func handleOperator(stack []string, res []string, operator string, currentOperator operator) ([]string, []string) {
-	stackCopy := append(stack[:0:0], stack...)
-	resCopy := append(res[:0:0], res...)
-
-	for j := len(stackCopy) - 1; j >= 0; j-- {
-		lastStackOperator, isLastOperator := operators[stackCopy[len(stackCopy)-1]]
+func handleOperator(stack *Stack, res *Stack, operator string, currentOperator operator) {
+	for j := stack.Len() - 1; j >= 0; j-- {
+		lastStackOperator, isLastOperator := operators[stack.Last()]
 
 		if isLastOperator && lastStackOperator.priority >= currentOperator.priority {
-			resCopy = append(resCopy, stackCopy[len(stackCopy)-1])
-			stackCopy = stackCopy[:len(stackCopy)-1]
+			res.Push(stack.Last())
+			stack.Pop()
 		} else {
 			break
 		}
 	}
-	stackCopy = append(stackCopy, operator)
-
-	return stackCopy, resCopy
+	stack.Push(operator)
 }

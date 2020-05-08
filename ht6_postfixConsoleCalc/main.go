@@ -5,19 +5,19 @@ import (
 	"os"
 	"strings"
 
-	c "./calc"
+	"./calc"
 )
 
 func main() {
-	args := os.Args[1:]
+	in := os.Args[1:]
 
-	if len(args) == 0 {
+	if len(in) == 0 {
 		fmt.Println("Input some expression. Only operations + - * / ^ () are supported")
 		return
 	}
 
-	result, postfix := c.GetResults(args)
-	fmt.Println("Преобразование: " + strings.Join(args, " ") + " --> " + strings.Join(postfix, " "))
+	result, postfix := calc.Calculate(in)
+	fmt.Println("Преобразование: " + strings.Join(in, " ") + " --> " + strings.Join(postfix, " "))
 	fmt.Println("--")
 	fmt.Println("Результат: " + fmt.Sprintf("%g", result))
 }
