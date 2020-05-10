@@ -6,7 +6,12 @@ import (
 
 // Calculate function
 func Calculate(expression []string) (float64, []string) {
-	postfix, err := GetPostfixNotation(expression)
+	tokens, err := Tokenize(expression)
+	if err != nil {
+		fmt.Println(err)
+		return 0, nil
+	}
+	postfix, err := GetPostfixNotation(tokens)
 	if err != nil {
 		fmt.Println(err)
 		return 0, nil

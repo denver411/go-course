@@ -27,6 +27,7 @@ func GetPostfixNotation(infix []string) ([]string, error) {
 		case isOperator:
 			handleOperator(&stack, &postfix, char, operator)
 		default:
+			// fmt.Println(char)
 			postfix.Push(char)
 		}
 	}
