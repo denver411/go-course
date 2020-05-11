@@ -18,6 +18,10 @@ func GetPostfixResult(expression []string) (float64, error) {
 		case string(char) == " ":
 			continue
 		case isOperator:
+			if len(stack) <= 1 {
+				return 0, errors.New("Wrong expression")
+			}
+
 			b, stack = stack[len(stack)-1], stack[:len(stack)-1]
 			a, stack = stack[len(stack)-1], stack[:len(stack)-1]
 			stack = append(stack, operator.apply(a, b))

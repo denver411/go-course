@@ -6,10 +6,14 @@ import (
 
 // GetPostfixNotation function
 func GetPostfixNotation(infix []string) ([]string, error) {
+	tokens, err := Tokenize(infix)
+	if err != nil {
+		return nil, err
+	}
 	stack := Stack{}
 	postfix := Stack{}
 
-	for _, char := range infix {
+	for _, char := range tokens {
 		operator, isOperator := operators[char]
 
 		switch {
@@ -27,7 +31,6 @@ func GetPostfixNotation(infix []string) ([]string, error) {
 		case isOperator:
 			handleOperator(&stack, &postfix, char, operator)
 		default:
-			// fmt.Println(char)
 			postfix.Push(char)
 		}
 	}

@@ -1,11 +1,10 @@
 package main
 
 import (
+	"cs-go-course5/dzhebov/ht6_postfixConsoleCalc/calc"
 	"fmt"
 	"os"
 	"strings"
-
-	"./calc"
 )
 
 func main() {
@@ -16,7 +15,19 @@ func main() {
 		return
 	}
 
-	result, postfix := calc.Calculate(in)
+	postfix, err := calc.GetPostfixNotation(in)
+	if err != nil {
+		fmt.Println("Error during transform to postfix:", err)
+		return
+	}
+
+	result, err := calc.GetPostfixResult(postfix)
+
+	if err != nil {
+		fmt.Println("Error during calculation:", err)
+		return
+	}
+
 	fmt.Println("Преобразование: " + strings.Join(in, " ") + " --> " + strings.Join(postfix, " "))
 	fmt.Println("--")
 	fmt.Println("Результат: " + fmt.Sprintf("%g", result))
