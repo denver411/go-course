@@ -18,38 +18,54 @@ func (s SortInt) Len() int {
 }
 
 func (s SortInt) Less(i, j int) bool {
-	return s[j] > s[i]
+	return s[i] < s[j]
 }
 
-func quickSortRec(s SortInt) SortInt {
+func (s SortInt) Swap(i, j int) {
+	if i != j {
+		s[j], s[i] = s[i], s[j]
+	}
+}
+
+func partition(s SortInt, first int, last int) int {
+	if first >= last {
+		return 0
+	}
+	x := first
+	for j := first + 1; j <= last; j++ {
+		if s.Less(j, first) {
+			x = x + 1
+			s.Swap(x, j)
+		}
+	}
+	s.Swap(x, first)
+	return x
+}
+
+func sort(s SortInt, first int, last int) {
+	if first < 0 || last > s.Len()-1 {
+		return
+	}
+	if first < last {
+		i := partition(s, first, last)
+		sort(s, first, i-1)
+		sort(s, i+1, last)
+	}
+}
+
+func quickSort(s SortInt) SortInt {
 	if s.Len() <= 1 {
 		return s
 	}
 
-	x := s[0]
-	xs := s[1:]
-	less := SortInt{}
-	more := SortInt{}
+	sort(s, 0, s.Len()-1)
 
-	for idx, i := range xs {
-		if s.Less(idx+1, 0) {
-			less = append(less, i)
-		} else {
-			more = append(more, i)
-		}
-	}
-
-	left := quickSortRec(less)
-	right := quickSortRec(more)
-	right = append(SortInt{x}, right...)
-
-	return append(left, right...)
+	return s
 }
 
 func main() {
 	sInt := SortInt{6, 4, 2, 9, 1, 0, 6, 2, 8}
-
 	fmt.Println("before:", sInt)
-	sortSlInt := quickSortRec(sInt)
+	sortSlInt := quickSort(sInt)
 	fmt.Println("after:", sortSlInt)
 }
