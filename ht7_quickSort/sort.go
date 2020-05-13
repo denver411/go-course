@@ -8,6 +8,7 @@ import (
 type Sort interface {
 	Len() int
 	Less(i, j int) bool
+	Swap(i, j int)
 }
 
 // SortInt struct
@@ -27,12 +28,14 @@ func (s SortInt) Swap(i, j int) {
 	}
 }
 
-func partition(s SortInt, first int, last int) int {
+func partition(s Sort, first int, last int) int {
 	if first >= last {
 		return 0
 	}
 	x := first
-	for j := first + 1; j <= last; j++ {
+	start := first + 1
+
+	for j := start; j <= last; j++ {
 		if s.Less(j, first) {
 			x = x + 1
 			s.Swap(x, j)
@@ -42,7 +45,7 @@ func partition(s SortInt, first int, last int) int {
 	return x
 }
 
-func sort(s SortInt, first int, last int) {
+func sort(s Sort, first int, last int) {
 	if first < 0 || last > s.Len()-1 {
 		return
 	}
@@ -53,7 +56,7 @@ func sort(s SortInt, first int, last int) {
 	}
 }
 
-func quickSort(s SortInt) SortInt {
+func quickSort(s Sort) Sort {
 	if s.Len() <= 1 {
 		return s
 	}

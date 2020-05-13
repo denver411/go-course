@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestSortIntLen(t *testing.T) {
+func TestLen(t *testing.T) {
 	var tests = []struct {
 		name string
 		data SortInt
@@ -24,8 +24,8 @@ func TestSortIntLen(t *testing.T) {
 	}
 }
 
-func TestSortIntLess(t *testing.T) {
-	sInt := SortInt{6, 4, 2, 9, 1, 0, 6, 2, 8}
+func TestLess(t *testing.T) {
+	sInt := SortInt{6, 4, 2, 6}
 	var tests = []struct {
 		name string
 		i    int
@@ -35,7 +35,7 @@ func TestSortIntLess(t *testing.T) {
 	}{
 		{"i less than j", 2, 3, sInt, true},
 		{"i more than j", 0, 1, sInt, false},
-		{"i equal j", 2, 7, sInt, false},
+		{"i equal j", 0, 3, sInt, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -47,22 +47,22 @@ func TestSortIntLess(t *testing.T) {
 	}
 }
 
-func TestSortIntSwap(t *testing.T) {
-	sInt := SortInt{6, 4, 2, 9, 1, 0, 6, 2, 8}
+func TestSwap(t *testing.T) {
+	s := SortInt{6, 4}
+	sSwap := SortInt{4, 6}
 	var tests = []struct {
 		name string
 		i    int
 		j    int
 		data SortInt
-		want bool
+		want SortInt
 	}{
-		{"elements 0,1 swap", 0, 1, sInt, true},
+		{"elements swapped", 0, 1, s, sSwap},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			prevI, prevJ := tt.data[tt.i], tt.data[tt.j]
 			tt.data.Swap(tt.i, tt.j)
-			got := prevI == tt.data[tt.j] && prevJ == tt.data[tt.i]
+			got := tt.data
 
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Swap() got = %v, want %v", got, tt.want)

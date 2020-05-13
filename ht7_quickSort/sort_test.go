@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestSortIntLen(t *testing.T) {
+func TestLen(t *testing.T) {
 	var tests = []struct {
 		name string
 		data SortInt
@@ -24,8 +24,8 @@ func TestSortIntLen(t *testing.T) {
 	}
 }
 
-func TestSortIntLess(t *testing.T) {
-	sInt := SortInt{6, 4, 2, 9, 1, 0, 6, 2, 8}
+func TestLess(t *testing.T) {
+	sInt := SortInt{6, 4, 2, 6}
 	var tests = []struct {
 		name string
 		i    int
@@ -35,13 +35,62 @@ func TestSortIntLess(t *testing.T) {
 	}{
 		{"i less than j", 2, 3, sInt, true},
 		{"i more than j", 0, 1, sInt, false},
-		{"i equal j", 2, 7, sInt, false},
+		{"i equal j", 0, 3, sInt, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := tt.data.Less(tt.i, tt.j)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Less() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSwap(t *testing.T) {
+	s := SortInt{6, 4}
+	sSwap := SortInt{4, 6}
+	var tests = []struct {
+		name string
+		i    int
+		j    int
+		data SortInt
+		want SortInt
+	}{
+		{"elements swapped", 0, 1, s, sSwap},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.data.Swap(tt.i, tt.j)
+			got := tt.data
+
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Swap() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestPartition(t *testing.T) {
+	s := SortInt{6, 4, 2, 9, 1, 0, 6, 2, 8}
+	sAfterPartition := SortInt{2, 4, 2, 1, 0, 6, 6, 9, 8}
+
+	var tests = []struct {
+		name  string
+		first int
+		last  int
+		data  SortInt
+		want  SortInt
+	}{
+		{"correct work", 0, 8, s, sAfterPartition},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			partition(tt.data, tt.first, tt.last)
+			got := tt.data
+
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Sort() got = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -62,7 +111,7 @@ func TestQuickSort(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := quickSortRec(tt.data)
+			got := quickSort(tt.data)
 
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Sort() got = %v, want %v", got, tt.want)
