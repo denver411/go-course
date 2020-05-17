@@ -1,35 +1,20 @@
 package calc
 
-// Stack interface
-type stackInt interface {
-	Len() int
-	Pop() string
-	Push(string) int
+func (s tokens) last() token {
+	return s[len(s)-1]
 }
 
-// Stack struct
-type Stack []string
-
-// Len method
-func (s Stack) Len() int {
-	return len(s)
-}
-
-// Last method
-func (s Stack) Last() string {
-	return s[s.Len()-1]
-}
-
-// Pop method
-func (s *Stack) Pop() string {
-	st := *s
-	last := st.Last()
-	*s = st[:st.Len()-1]
+func (s *tokens) pop() token {
+	last := s.last()
+	*s = (*s)[:len(*s)-1]
 	return last
 }
 
-// Push method
-func (s *Stack) Push(new string) int {
+func (s *tokens) push(new token) int {
 	*s = append(*s, new)
-	return s.Len()
+	return len(*s)
+}
+
+func (s tokens) empty() bool {
+	return len(s) == 0
 }

@@ -15,20 +15,28 @@ func main() {
 		return
 	}
 
-	postfix, err := calc.GetPostfixNotation(in)
+	expression := strings.Join(in, " ")
+
+	tokens, err := calc.Tokenize(expression)
 	if err != nil {
-		fmt.Println("Error during transform to postfix:", err)
+		fmt.Printf("error while getting postfix: %v\n", err)
+		return
+	}
+	postfix, err := calc.Parse(tokens)
+	if err != nil {
+		fmt.Printf("error while getting postfix: %v\n", err)
 		return
 	}
 
-	result, err := calc.GetPostfixResult(postfix)
+	postfixString := calc.TokensToString(postfix)
 
+	result, err := calc.Calculate(postfix)
 	if err != nil {
-		fmt.Println("Error during calculation:", err)
+		fmt.Printf("error while calculate: %v\n", err)
 		return
 	}
 
-	fmt.Println("Преобразование: " + strings.Join(in, " ") + " --> " + strings.Join(postfix, " "))
-	fmt.Println("--")
-	fmt.Println("Результат: " + fmt.Sprintf("%g", result))
+	fmt.Printf("Преобразование: %s --> %s", expression, postfixString)
+	fmt.Printf("\n--\n")
+	fmt.Printf("Результат: %g\n", result)
 }
