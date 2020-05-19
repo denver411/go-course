@@ -5,7 +5,33 @@ import (
 	"testing"
 )
 
-func TestParse(t *testing.T) {
+func Test_handleBracket(t *testing.T) {
+	stack := &tokens{tOpenBracket, tPlus, tTwo}
+	stackNoBrackets := &tokens{tPlus, tTwo}
+	res := &tokens{}
+
+	type args struct {
+		stack *tokens
+		res   *tokens
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{"correct work", args{stack, res}, false},
+		{"unpaired brackets", args{stackNoBrackets, res}, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if err := handleBracket(tt.args.stack, tt.args.res); (err != nil) != tt.wantErr {
+				t.Errorf("handleBracket() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func Test_makePostfix(t *testing.T) {
 	tokensInfixSimple := tokens{tOne, tPlus, tTwo}
 	tokensPostfixSimple := tokens{tOne, tTwo, tPlus}
 	tokensInfixPrioritized := tokens{tTwo, tPlus, tTwo, tMult, tTwo}
@@ -35,40 +61,33 @@ func TestParse(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := Parse(tt.args.infix)
+			got, err := makePostfix(tt.args.infix)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("Parse() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("makePostfix() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Parse() = %v, want %v", got, tt.want)
+				t.Errorf("makePostfix() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func Test_handleBracket(t *testing.T) {
-	stack := &tokens{tOpenBracket, tPlus, tTwo}
-	stackNoBrackets := &tokens{tPlus, tTwo}
-	res := &tokens{}
-
+func Test_handleOperator(t *testing.T) {
 	type args struct {
-		stack *tokens
-		res   *tokens
+		stack   *tokens
+		res     *tokens
+		current token
 	}
 	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
+		name string
+		args args
 	}{
-		{"correct work", args{stack, res}, false},
-		{"unpaired brackets", args{stackNoBrackets, res}, true},
+		// TODO: Add test cases.
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := handleBracket(tt.args.stack, tt.args.res); (err != nil) != tt.wantErr {
-				t.Errorf("handleBracket() error = %v, wantErr %v", err, tt.wantErr)
-			}
+			handleOperator(tt.args.stack, tt.args.res, tt.args.current)
 		})
 	}
 }

@@ -4,8 +4,7 @@ import (
 	"errors"
 )
 
-// Parse func
-func Parse(infix tokens) (tokens, error) {
+func makePostfix(infix tokens) (tokens, error) {
 	stack := tokens{}
 	postfix := tokens{}
 	var prev *token
@@ -18,15 +17,16 @@ func Parse(infix tokens) (tokens, error) {
 			}
 			postfix.push(t)
 		case bracket:
-			if isOpenBracket(t) {
+			if t.isOpenBracket() {
 				stack.push(t)
-			} else {
-				err := handleBracket(&stack, &postfix)
-
-				if err != nil {
-					return nil, err
-				}
+				continue
 			}
+			err := handleBracket(&stack, &postfix)
+
+			if err != nil {
+				return nil, err
+			}
+
 		case operator:
 			if prev != nil && prev.t == operator {
 				return nil, errors.New("two operators in a row")
@@ -46,7 +46,7 @@ func Parse(infix tokens) (tokens, error) {
 }
 
 func handleBracket(stack *tokens, res *tokens) error {
-	for !stack.empty() && !isOpenBracket(stack.last()) {
+	for !stack.empty() && !stack.last().isOpenBracket() {
 		last := stack.pop()
 		res.push(last)
 	}

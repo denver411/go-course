@@ -5,8 +5,13 @@ import (
 	"strconv"
 )
 
-func Calculate(tokens tokens) (float64, error) {
-	stack := []float64{}
+// Calculate func
+func Calculate(exp string) (float64, error) {
+	tokens, err := tokenize(exp)
+	if err != nil {
+		return 0, err
+	}
+	stack := stackFloat{}
 
 	for _, t := range tokens {
 		switch t.t {
@@ -21,15 +26,14 @@ func Calculate(tokens tokens) (float64, error) {
 			if len(stack) < 2 {
 				return 0, errors.New("Wrong expression")
 			}
-			a, b := stack[len(stack)-1], stack[len(stack)-2]
+			a, b := stack.pop(), stack.pop()
 			result, err := applyOperator(t.v, b, a)
 
 			if err != nil {
 				return 0, err
 			}
 
-			stack = stack[:len(stack)-2]
-			stack = append(stack, result)
+			stack.push(result)
 		}
 	}
 
@@ -38,4 +42,19 @@ func Calculate(tokens tokens) (float64, error) {
 	}
 
 	return stack[len(stack)-1], nil
+}
+
+// Parse func
+func Parse(exp string) (string, error) {
+	tokens, err := tokenize(exp)
+	if err != nil {
+		return "", err
+	}
+
+	result, err := makePostfix(tokens)
+	if err != nil {
+		return "", err
+	}
+
+	return result.String(), nil
 }

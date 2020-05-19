@@ -24,9 +24,8 @@ func applyOperator(operator string, operand1 float64, operand2 float64) (float64
 	case "/":
 		if operand2 == 0 {
 			return 0, errors.New("Division by zero")
-		} else {
-			res = operand1 / operand2
 		}
+		res = operand1 / operand2
 	case "*":
 		res = operand1 * operand2
 	case "^":

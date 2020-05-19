@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestTokenize(t *testing.T) {
+func Test_tokenize(t *testing.T) {
 	type args struct {
 		expression string
 	}
@@ -20,13 +20,13 @@ func TestTokenize(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := Tokenize(tt.args.expression)
+			got, err := tokenize(tt.args.expression)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("Tokenize() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("tokenize() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Tokenize() = %v, want %v", got, tt.want)
+				t.Errorf("tokenize() = %v, want %v", got, tt.want)
 			}
 		})
 	}

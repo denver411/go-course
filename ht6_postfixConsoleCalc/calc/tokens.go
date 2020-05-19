@@ -40,25 +40,43 @@ var tokensMap = map[rune]tokenT{
 	'9': literal,
 }
 
-func (t token) toString() string {
+func (t token) String() string {
 	return t.v
 }
 
-func createToken(t tokenT, v rune) token {
-	return token{t: t, v: string(v)}
+func createToken(t tokenT, v string) token {
+	return token{t: t, v: v}
 }
 
-func isOpenBracket(t token) bool {
-	return t.t == bracket && t.toString() == "("
+func (t token) isOpenBracket() bool {
+	return t.t == bracket && t.v == "("
 }
 
-// TokensToString func
-func TokensToString(ts tokens) string {
-	res := make([]string, 0, len(ts))
+func (ts tokens) String() string {
+	res := make([]string, len(ts))
 
-	for _, t := range ts {
-		res = append(res, t.toString())
+	for i, t := range ts {
+		res[i] = t.String()
 	}
 
 	return strings.Join(res, " ")
+}
+
+func (ts tokens) last() token {
+	return ts[len(ts)-1]
+}
+
+func (ts *tokens) pop() token {
+	last := ts.last()
+	*ts = (*ts)[:len(*ts)-1]
+	return last
+}
+
+func (ts *tokens) push(new token) int {
+	*ts = append(*ts, new)
+	return len(*ts)
+}
+
+func (ts tokens) empty() bool {
+	return len(ts) == 0
 }

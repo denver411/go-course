@@ -17,18 +17,11 @@ func main() {
 
 	expression := strings.Join(in, " ")
 
-	tokens, err := calc.Tokenize(expression)
+	postfix, err := calc.Parse(expression)
 	if err != nil {
 		fmt.Printf("error while getting postfix: %v\n", err)
 		return
 	}
-	postfix, err := calc.Parse(tokens)
-	if err != nil {
-		fmt.Printf("error while getting postfix: %v\n", err)
-		return
-	}
-
-	postfixString := calc.TokensToString(postfix)
 
 	result, err := calc.Calculate(postfix)
 	if err != nil {
@@ -36,7 +29,7 @@ func main() {
 		return
 	}
 
-	fmt.Printf("Преобразование: %s --> %s", expression, postfixString)
+	fmt.Printf("Преобразование: %s --> %s", expression, postfix)
 	fmt.Printf("\n--\n")
 	fmt.Printf("Результат: %g\n", result)
 }

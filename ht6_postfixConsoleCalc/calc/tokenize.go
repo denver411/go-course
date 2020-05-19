@@ -4,13 +4,12 @@ import (
 	"errors"
 )
 
-// Tokenize func
-func Tokenize(expression string) (tokens, error) {
+func tokenize(expression string) (tokens, error) {
 	res := tokens{}
 	acc := ""
 
-	for _, char := range expression {
-		tokenType, isToken := tokensMap[char]
+	for _, ch := range expression {
+		tokenType, isToken := tokensMap[ch]
 
 		if !isToken {
 			return nil, errors.New("wrong symbol")
@@ -19,17 +18,17 @@ func Tokenize(expression string) (tokens, error) {
 		switch tokenType {
 		case separator:
 			if acc != "" {
-				res.push(token{t: literal, v: acc})
+				res.push(createToken(literal, acc))
 				acc = ""
 			}
 		case literal:
-			acc = acc + string(char)
+			acc = acc + string(ch)
 		case bracket, operator:
 			if acc != "" {
-				res.push(token{t: literal, v: acc})
+				res.push(createToken(literal, acc))
 				acc = ""
 			}
-			res.push(createToken(tokenType, char))
+			res.push(createToken(tokenType, string(ch)))
 		}
 
 	}
