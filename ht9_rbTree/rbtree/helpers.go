@@ -90,11 +90,6 @@ func rightRotate(tree *RBTree, node *Node) {
 }
 
 func insertFixup(tree *RBTree, node *Node) {
-	// if node == tree.Root {
-	// 	tree.Root.makeBlack()
-	// 	return
-	// }
-
 	for node.P.isRed() {
 		if node.P == node.P.P.Left {
 			uncle := node.P.P.Right

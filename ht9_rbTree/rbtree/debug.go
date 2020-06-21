@@ -20,17 +20,17 @@ func getKey(x *Node) string {
 	return strconv.Itoa(*x.Key)
 }
 
-func nodeToString(tree *RBTree, x *Node) nodeAsString {
-	return nodeAsString{key: *x.Key, color: x.Color, isRoot: x == tree.Root, left: "left:" + getKey(x.Left), right: "right:" + getKey(x.Right)}
+func nodeToString(x *Node) nodeAsString {
+	return nodeAsString{key: *x.Key, color: x.Color, isRoot: x.P.isNil(), left: "left:" + getKey(x.Left), right: "right:" + getKey(x.Right)}
 }
 
-func treeToString(tree *RBTree, x *Node) []nodeAsString {
+func treeToString(x *Node) []nodeAsString {
 	if x.isNil() {
 		return []nodeAsString{}
 	}
 
-	left := treeToString(tree, x.Left)
-	right := treeToString(tree, x.Right)
+	left := treeToString(x.Left)
+	right := treeToString(x.Right)
 
-	return append(left, append([]nodeAsString{nodeToString(tree, x)}, right...)...)
+	return append(left, append([]nodeAsString{nodeToString(x)}, right...)...)
 }
