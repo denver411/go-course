@@ -1,4 +1,4 @@
-package rbtree
+package avltree
 
 import (
 	"reflect"
@@ -6,6 +6,15 @@ import (
 )
 
 func Test_findMin(t *testing.T) {
+	tree := &AVLTree{
+		Root: &Node{
+			P:      nil,
+			Left:   nodeOne,
+			Right:  nil,
+			Key:    2,
+			Height: 1,
+		},
+	}
 	type args struct {
 		node *Node
 	}
@@ -14,7 +23,7 @@ func Test_findMin(t *testing.T) {
 		args args
 		want *Node
 	}{
-		{"correct", args{nodeFive}, nodeFive},
+		{"correct", args{tree.Root}, nodeOne},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -26,6 +35,15 @@ func Test_findMin(t *testing.T) {
 }
 
 func Test_findMax(t *testing.T) {
+	tree := &AVLTree{
+		Root: &Node{
+			P:      nil,
+			Left:   nil,
+			Right:  nodeFive,
+			Key:    2,
+			Height: 1,
+		},
+	}
 	type args struct {
 		node *Node
 	}
@@ -34,7 +52,7 @@ func Test_findMax(t *testing.T) {
 		args args
 		want *Node
 	}{
-		{"correct", args{nodeFive}, nodeFive},
+		{"correct", args{tree.Root}, nodeFive},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -80,16 +98,15 @@ func Test_findNode(t *testing.T) {
 	nodeThree.P = nodeOne
 
 	type args struct {
-		tree *RBTree
-		key  *int
+		tree *AVLTree
+		key  int
 	}
-
 	tests := []struct {
 		name string
 		args args
 		want *Node
 	}{
-		{"correct", args{tree, &k5}, nodeFive},
+		{"correct", args{tree, 5}, nodeFive},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -102,7 +119,7 @@ func Test_findNode(t *testing.T) {
 
 func Test_leftRotate(t *testing.T) {
 	type args struct {
-		tree *RBTree
+		tree *AVLTree
 		node *Node
 	}
 	tests := []struct {
@@ -120,7 +137,7 @@ func Test_leftRotate(t *testing.T) {
 
 func Test_rightRotate(t *testing.T) {
 	type args struct {
-		tree *RBTree
+		tree *AVLTree
 		node *Node
 	}
 	tests := []struct {
@@ -136,9 +153,9 @@ func Test_rightRotate(t *testing.T) {
 	}
 }
 
-func Test_insertFixup(t *testing.T) {
+func Test_balance(t *testing.T) {
 	type args struct {
-		tree *RBTree
+		tree *AVLTree
 		node *Node
 	}
 	tests := []struct {
@@ -149,14 +166,14 @@ func Test_insertFixup(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			insertFixup(tt.args.tree, tt.args.node)
+			balance(tt.args.tree, tt.args.node)
 		})
 	}
 }
 
 func Test_transplant(t *testing.T) {
 	type args struct {
-		tree *RBTree
+		tree *AVLTree
 		old  *Node
 		new  *Node
 	}
@@ -173,27 +190,9 @@ func Test_transplant(t *testing.T) {
 	}
 }
 
-func Test_deleteFixup(t *testing.T) {
-	type args struct {
-		tree *RBTree
-		node *Node
-	}
-	tests := []struct {
-		name string
-		args args
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			deleteFixup(tt.args.tree, tt.args.node)
-		})
-	}
-}
-
 func Test_deleteKey(t *testing.T) {
 	type args struct {
-		tree *RBTree
+		tree *AVLTree
 		node *Node
 	}
 	tests := []struct {

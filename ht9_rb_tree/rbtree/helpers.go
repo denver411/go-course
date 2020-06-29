@@ -220,9 +220,15 @@ func deleteKey(tree *RBTree, node *Node) {
 		next = node.Left
 		transplant(tree, node, node.Left)
 	default:
-		new = findMin(node.Right)
+		if node.Right.isNil() {
+			new = node
+		} else {
+
+			new = findMin(node.Right)
+		}
 		color = new.Color
 		next = new.Right
+
 		if new.P == node {
 			next.P = new
 		} else {

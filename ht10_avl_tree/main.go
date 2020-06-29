@@ -1,7 +1,7 @@
 package main
 
 import (
-	"cs-go-course5/dzhebov/ht10_avlTree/avltree"
+	"cs-go-course5/dzhebov/ht10_avl_tree/avltree"
 	"fmt"
 )
 
@@ -19,19 +19,19 @@ func main() {
 	tree := avltree.MakeTree()
 	tree.Insert(1)
 	tree.Insert(2)
-	tree.Insert(2)
-	tree.Insert(4)
+	// tree.Insert(2)
+	// tree.Insert(4)
 	tree.Insert(3)
-	tree.Insert(5)
-	tree.Insert(7)
-	tree.Insert(10)
-	tree.Insert(11)
-	tree.Insert(14)
-	tree.Insert(15)
-	tree.Insert(17)
+	// tree.Insert(5)
+	// tree.Insert(7)
+	// tree.Insert(10)
+	// tree.Insert(11)
+	// tree.Insert(14)
+	// tree.Insert(15)
+	// tree.Insert(17)
 
 	fmt.Printf("\ntree: %v", tree.InOrder())
-	tree.Delete(11)
+	tree.Delete(1)
 	tree.Delete(10)
 	tree.Delete(17)
 	fmt.Printf("\ntree after deleting: %v", tree.InOrder())

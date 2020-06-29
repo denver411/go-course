@@ -1,7 +1,7 @@
 package main
 
 import (
-	"cs-go-course5/dzhebov/ht11_bTree/btree"
+	"cs-go-course5/dzhebov/ht11_b_tree/btree"
 	"fmt"
 )
 

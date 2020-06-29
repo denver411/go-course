@@ -63,6 +63,7 @@ func (tree *RBTree) Insert(key int) {
 
 // InOrder func
 func (tree *RBTree) InOrder() []int {
+	// fmt.Printf("\nfull tree: %v", treeToString(tree.Root))
 	return inOrderTree(tree.Root)
 }
 

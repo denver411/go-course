@@ -1,48 +1,25 @@
-package rbtree
+package avltree
 
 import (
 	"reflect"
 	"testing"
 )
 
-func Test_makeNil(t *testing.T) {
-	tests := []struct {
-		name string
-		want *Node
-	}{
-		{"correct", &Node{
-			P:     nil,
-			Left:  nil,
-			Right: nil,
-			Key:   nil,
-			Color: black,
-		},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := makeNil(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("makeNil() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func Test_makeNode(t *testing.T) {
 	type args struct {
-		key *int
+		key int
 	}
 	tests := []struct {
 		name string
 		args args
 		want *Node
 	}{
-		{"correct", args{&k5}, &Node{
-			P:     nil,
-			Left:  makeNil(),
-			Right: makeNil(),
-			Key:   &k5,
-			Color: red,
+		{"correct", args{5}, &Node{
+			P:      nil,
+			Left:   nil,
+			Right:  nil,
+			Key:    5,
+			Height: 1,
 		},
 		},
 	}
@@ -55,30 +32,44 @@ func Test_makeNode(t *testing.T) {
 	}
 }
 
-func TestNode_makeRed(t *testing.T) {
+func TestNode_getHeight(t *testing.T) {
 	tests := []struct {
 		name string
 		node *Node
+		want int
 	}{
-		// TODO: Add test cases.
+		{"correct", &Node{
+			P:      nil,
+			Left:   nil,
+			Right:  nil,
+			Key:    5,
+			Height: 1,
+		}, 1,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.node.makeBlack()
+			if got := tt.node.getHeight(); got != tt.want {
+				t.Errorf("Node.getHeight() = %v, want %v", got, tt.want)
+			}
 		})
 	}
 }
 
-func TestNode_makeBlack(t *testing.T) {
+func TestNode_setHeight(t *testing.T) {
+	type args struct {
+		h int
+	}
 	tests := []struct {
 		name string
 		node *Node
+		args args
 	}{
 		// TODO: Add test cases.
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.node.makeBlack()
+			tt.node.setHeight(tt.args.h)
 		})
 	}
 }
@@ -89,8 +80,15 @@ func TestNode_isNil(t *testing.T) {
 		node *Node
 		want bool
 	}{
-		{"is nil", nodeNil, true},
-		{"is not nil", nodeOne, false},
+		{"is not nil", &Node{
+			P:      nil,
+			Left:   nil,
+			Right:  nil,
+			Key:    5,
+			Height: 1,
+		}, false,
+		},
+		{"is nil", nil, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -101,38 +99,40 @@ func TestNode_isNil(t *testing.T) {
 	}
 }
 
-func TestNode_isRed(t *testing.T) {
+func TestNode_balanceFactor(t *testing.T) {
+	tree := MakeTree()
+	tree.Root = nodeOne
+	tree.Root.Right = nodeFive
+	nodeFive.P = nodeOne
+	tree.Root.Left = nodeThree
+	nodeThree.P = nodeOne
+
 	tests := []struct {
 		name string
 		node *Node
-		want bool
+		want int
 	}{
-		{"is red", nodeOne, true},
-		{"is not red", nodeNil, false},
+		{"correct", tree.Root, 0},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.node.isRed(); got != tt.want {
-				t.Errorf("Node.isRed() = %v, want %v", got, tt.want)
+			if got := tt.node.balanceFactor(); got != tt.want {
+				t.Errorf("Node.balanceFactor() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestNode_isBlack(t *testing.T) {
+func TestNode_fixHeight(t *testing.T) {
 	tests := []struct {
 		name string
 		node *Node
-		want bool
 	}{
-		{"is black", nodeNil, true},
-		{"is not black", nodeOne, false},
+		// TODO: Add test cases.
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.node.isBlack(); got != tt.want {
-				t.Errorf("Node.isBlack() = %v, want %v", got, tt.want)
-			}
+			tt.node.fixHeight()
 		})
 	}
 }

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"cs-go-course5/dzhebov/ht9_rbTree/rbtree"
+	"cs-go-course5/dzhebov/ht9_rb_tree/rbtree"
 	"fmt"
 )
 
@@ -18,19 +18,20 @@ import (
 func main() {
 	tree := rbtree.MakeTree()
 	tree.Insert(1)
-	tree.Insert(2)
+	// tree.Insert(2)
 	tree.Insert(2)
 	tree.Insert(3)
-	tree.Insert(5)
-	tree.Insert(7)
-	tree.Insert(10)
-	tree.Insert(11)
-	tree.Insert(14)
-	tree.Insert(15)
-	tree.Insert(17)
+	// tree.Insert(5)
+	// tree.Insert(7)
+	// tree.Insert(10)
+	// tree.Insert(11)
+	// tree.Insert(14)
+	// tree.Insert(15)
+	// tree.Insert(17)
 
 	fmt.Printf("\ntree: %v", tree.InOrder())
-	tree.Delete(11)
+	tree.Delete(3)
+	tree.Delete(110)
 	fmt.Printf("\ntree after deleting: %v", tree.InOrder())
 	min := tree.Min()
 	max := tree.Max()
